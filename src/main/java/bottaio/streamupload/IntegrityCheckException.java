@@ -1,4 +1,4 @@
-package me.bottaio.streamupload;
+package bottaio.streamupload;
 
 /**
  * Thrown when final integrity check fails. It suggests that the multipart upload failed

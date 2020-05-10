@@ -1,4 +1,4 @@
-package me.bottaio.streamupload;
+package bottaio.streamupload;
 
 import com.amazonaws.util.Base64;
 import lombok.AllArgsConstructor;

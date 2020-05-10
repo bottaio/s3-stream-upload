@@ -1,13 +1,13 @@
-package me.bottaio.streamupload.s3;
+package bottaio.streamupload.s3;
 
+import bottaio.streamupload.StreamPart;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
-import me.bottaio.streamupload.StreamPart;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static me.bottaio.streamupload.StreamTransferManager.Config;
+import static bottaio.streamupload.StreamTransferManager.Config;
 
 @RequiredArgsConstructor
 public class AwsFacade {

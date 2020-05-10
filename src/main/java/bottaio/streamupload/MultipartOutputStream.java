@@ -1,4 +1,4 @@
-package me.bottaio.streamupload;
+package bottaio.streamupload;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,4 +1,4 @@
-package me.bottaio.streamupload;
+package bottaio.streamupload;
 
 public interface StreamPartUploader {
   void initialize();

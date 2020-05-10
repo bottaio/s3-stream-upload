@@ -1,4 +1,4 @@
-package me.bottaio.streamupload.s3;
+package bottaio.streamupload.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -6,9 +6,9 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.PartETag;
 import lombok.Builder;
 import lombok.Data;
-import me.bottaio.streamupload.ConvertibleOutputStream;
-import me.bottaio.streamupload.StreamPart;
-import me.bottaio.streamupload.StreamTransferManager.Config;
+import bottaio.streamupload.ConvertibleOutputStream;
+import bottaio.streamupload.StreamPart;
+import bottaio.streamupload.StreamTransferManager.Config;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.localstack.LocalStackContainer;

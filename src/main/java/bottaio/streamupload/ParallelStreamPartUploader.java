@@ -1,11 +1,11 @@
-package me.bottaio.streamupload;
+package bottaio.streamupload;
 
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static me.bottaio.streamupload.StreamTransferManager.Config;
+import static bottaio.streamupload.StreamTransferManager.Config;
 
 @Slf4j
 public class ParallelStreamPartUploader implements StreamPartUploader {

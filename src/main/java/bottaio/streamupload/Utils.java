@@ -1,4 +1,4 @@
-package me.bottaio.streamupload;
+package bottaio.streamupload;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

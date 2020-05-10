@@ -1,8 +1,8 @@
-package me.bottaio.streamupload.s3;
+package bottaio.streamupload.s3;
 
 import com.amazonaws.services.s3.model.PartETag;
-import me.bottaio.streamupload.StreamPart;
-import me.bottaio.streamupload.StreamPartUploader;
+import bottaio.streamupload.StreamPart;
+import bottaio.streamupload.StreamPartUploader;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

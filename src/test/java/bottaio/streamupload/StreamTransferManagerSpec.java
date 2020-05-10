@@ -1,11 +1,11 @@
-package me.bottaio.streamupload;
+package bottaio.streamupload;
 
+import bottaio.streamupload.s3.AwsFacade;
+import bottaio.streamupload.s3.S3StreamPartUploader;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
-import me.bottaio.streamupload.s3.AwsFacade;
-import me.bottaio.streamupload.s3.S3StreamPartUploader;
 import org.junit.Assert;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -14,7 +14,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static com.amazonaws.services.s3.internal.Constants.MB;
-import static me.bottaio.streamupload.StreamTransferManager.Config;
+import static bottaio.streamupload.StreamTransferManager.Config;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
 @Testcontainers

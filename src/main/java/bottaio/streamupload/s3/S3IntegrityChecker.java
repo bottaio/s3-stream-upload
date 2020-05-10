@@ -1,9 +1,9 @@
-package me.bottaio.streamupload.s3;
+package bottaio.streamupload.s3;
 
 import com.amazonaws.services.s3.model.PartETag;
 import com.amazonaws.util.BinaryUtils;
-import me.bottaio.streamupload.IntegrityCheckException;
-import me.bottaio.streamupload.Utils;
+import bottaio.streamupload.IntegrityCheckException;
+import bottaio.streamupload.Utils;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
