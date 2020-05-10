@@ -1,4 +1,4 @@
-package alex.mojaki.s3upload;
+package bottaio.s3upload;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

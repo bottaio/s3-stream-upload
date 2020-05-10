@@ -8,17 +8,16 @@ an `OutputStream` that packages data written to it into chunks which are sent in
 several streams and upload the data in parallel.
 
 The entrypoint is the class `StreamTransferManager`. Read more in the
-[javadoc](http://alexmojaki.github.io/s3-stream-upload/javadoc/apidocs/alex/mojaki/s3upload/StreamTransferManager.html),
+[javadoc](http://bottaio.github.io/s3-stream-upload/javadoc/apidocs/alex/mojaki/s3upload/StreamTransferManager.html),
 including a usage example.
 
-This is available from [maven central](https://mvnrepository.com/artifact/com.github.alexmojaki/s3-stream-upload/latest).
+This is available from [maven central](https://mvnrepository.com/artifact/com.github.bottaio/s3-stream-upload/latest).
 
 ## Changelog
 
 ### 2.2.0
 
-- [Add `checkIntegrity()` method](https://github.com/alexmojaki/s3-stream-upload/pull/26) thanks
-to **@gkolakowski-ias**. This allows verifying the upload with MD5 hashes.
+- Add `checkIntegrity()` method thanks to **@gkolakowski-ias**. This allows verifying the upload with MD5 hashes.
 
 ### 2.1.0
 

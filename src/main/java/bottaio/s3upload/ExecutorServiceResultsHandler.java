@@ -1,4 +1,4 @@
-package alex.mojaki.s3upload;
+package bottaio.s3upload;
 
 import java.util.Iterator;
 import java.util.concurrent.Callable;

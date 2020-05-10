@@ -1,4 +1,4 @@
-package alex.mojaki.s3upload;
+package bottaio.s3upload;
 
 /**
  * Thrown when final integrity check fails. It suggests that the multipart upload failed

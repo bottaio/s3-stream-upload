@@ -1,4 +1,4 @@
-package alex.mojaki.s3upload;
+package bottaio.s3upload;
 
 import java.lang.InterruptedException;
 import java.lang.RuntimeException;
