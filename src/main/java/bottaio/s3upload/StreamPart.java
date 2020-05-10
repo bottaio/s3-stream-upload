@@ -8,7 +8,7 @@ import java.io.InputStream;
  * A simple class which holds some data which can be uploaded to S3 as part of a multipart upload and a part number
  * identifying it.
  */
-class StreamPart {
+public class StreamPart {
 
     private ConvertibleOutputStream stream;
     private int partNumber;

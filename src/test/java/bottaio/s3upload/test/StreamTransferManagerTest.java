@@ -1,6 +1,8 @@
 package bottaio.s3upload.test;
 
+import bottaio.s3upload.AwsFacade;
 import bottaio.s3upload.MultiPartOutputStream;
+import bottaio.s3upload.StreamPart;
 import bottaio.s3upload.StreamTransferManager;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.SDKGlobalConfiguration;
@@ -169,7 +171,7 @@ public class StreamTransferManagerTest {
                 .build();
 
         int numStreams = 2;
-        final StreamTransferManager manager = new StreamTransferManager(StreamTransferManager.Config.builder()
+        StreamTransferManager.Config config = StreamTransferManager.Config.builder()
             .bucketName(containerName)
             .putKey(key)
             .numStreams(numStreams)
@@ -177,10 +179,11 @@ public class StreamTransferManagerTest {
             .queueCapacity(2)
             .partSize(10)
             .checkIntegrity(true)
-            .build(), client) {
-
+            .build();
+        final StreamTransferManager manager = new StreamTransferManager(config, new AwsFacade(config, client) {
             @Override
-            public void customiseUploadPartRequest(UploadPartRequest request) {
+            protected UploadPartRequest uploadPartRequest(String uploadId, StreamPart part) {
+                UploadPartRequest request = super.uploadPartRequest(uploadId, part);
                 /*
                 Workaround from https://github.com/andrewgaul/s3proxy/commit/50a302436271ec46ce81a415b4208b9e14fcaca4
                 to deal with https://github.com/andrewgaul/s3proxy/issues/80
@@ -188,8 +191,10 @@ public class StreamTransferManagerTest {
                 ObjectMetadata metadata = new ObjectMetadata();
                 metadata.setContentType("application/unknown");
                 request.setObjectMetadata(metadata);
+
+                return request;
             }
-        };
+        });
 
         final List<MultiPartOutputStream> streams = manager.getMultiPartOutputStreams();
         List<StringBuilder> builders = new ArrayList<StringBuilder>(numStreams);
