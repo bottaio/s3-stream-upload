@@ -1,6 +1,7 @@
 package bottaio.s3upload;
 
 import com.amazonaws.util.Base64;
+import lombok.AllArgsConstructor;
 
 import java.io.InputStream;
 
@@ -8,27 +9,14 @@ import java.io.InputStream;
  * A simple class which holds some data which can be uploaded to S3 as part of a multipart upload and a part number
  * identifying it.
  */
+@AllArgsConstructor
 public class StreamPart {
 
-    private ConvertibleOutputStream stream;
-    private int partNumber;
-
-    /**
-     * A 'poison pill' placed on the queue to indicate that there are no further parts from a stream.
-     */
-    static final StreamPart POISON = new StreamPart(null, -1);
-
-    public StreamPart(ConvertibleOutputStream stream, int partNumber) {
-        this.stream = stream;
-        this.partNumber = partNumber;
-    }
+    private final ConvertibleOutputStream stream;
+    private final int partNumber;
 
     public int getPartNumber() {
         return partNumber;
-    }
-
-    public ConvertibleOutputStream getOutputStream() {
-        return stream;
     }
 
     public InputStream getInputStream() {
