@@ -1,9 +1,7 @@
-package bottaio.s3upload;
+package com.github.bottaio.streamupload;
 
 public interface StreamPartUploader {
   void initialize();
-
-  String getUploadId();
 
   void upload(StreamPart part);
 

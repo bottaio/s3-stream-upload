@@ -1,11 +1,10 @@
-package bottaio.s3upload;
+package com.github.bottaio.streamupload;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
@@ -37,7 +36,7 @@ class ConvertibleOutputStream extends ByteArrayOutputStream {
    */
   public ConvertibleOutputStream split(int countToKeep, int initialCapacityForNewStream) {
     int newCount = count - countToKeep;
-    log.debug("Splitting stream of size {} into parts with sizes {} and {}", count, countToKeep, newCount);
+    log.info("Splitting stream of size {} into parts with sizes {} and {}", count, countToKeep, newCount);
     initialCapacityForNewStream = Math.max(initialCapacityForNewStream, newCount);
     ConvertibleOutputStream newStream = new ConvertibleOutputStream(initialCapacityForNewStream);
     newStream.write(buf, countToKeep, newCount);

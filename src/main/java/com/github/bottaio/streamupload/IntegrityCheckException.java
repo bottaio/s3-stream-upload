@@ -1,4 +1,4 @@
-package bottaio.s3upload;
+package com.github.bottaio.streamupload;
 
 /**
  * Thrown when final integrity check fails. It suggests that the multipart upload failed

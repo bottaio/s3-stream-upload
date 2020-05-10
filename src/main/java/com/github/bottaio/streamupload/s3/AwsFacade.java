@@ -1,21 +1,20 @@
-package bottaio.s3upload;
+package com.github.bottaio.streamupload.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
-import com.amazonaws.util.BinaryUtils;
-import lombok.AllArgsConstructor;
+import com.github.bottaio.streamupload.StreamPart;
+import lombok.RequiredArgsConstructor;
 
 import java.io.ByteArrayInputStream;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-@AllArgsConstructor
+import static com.github.bottaio.streamupload.StreamTransferManager.Config;
+
+@RequiredArgsConstructor
 public class AwsFacade {
   private final Config config;
   private final AmazonS3 s3Client;
+  private final S3IntegrityChecker integrityChecker = new S3IntegrityChecker();
 
   protected InitiateMultipartUploadRequest initiateMultipartUploadRequest() {
     return new InitiateMultipartUploadRequest(config.getBucketName(), config.getPutKey());
@@ -70,37 +69,12 @@ public class AwsFacade {
     CompleteMultipartUploadRequest completeRequest = finalizeUploadRequest(uploadId, partETags);
     CompleteMultipartUploadResult completeMultipartUploadResult = s3Client.completeMultipartUpload(completeRequest);
     if (config.isCheckIntegrity()) {
-      checkCompleteFileIntegrity(completeMultipartUploadResult.getETag(), partETags);
+      integrityChecker.check(completeMultipartUploadResult.getETag(), partETags);
     }
   }
 
   public final void abortUpload(String uploadId) {
     AbortMultipartUploadRequest abortMultipartUploadRequest = abortUploadRequest(uploadId);
     s3Client.abortMultipartUpload(abortMultipartUploadRequest);
-  }
-
-  // todo: move it
-  private void checkCompleteFileIntegrity(String s3ObjectETag, List<PartETag> partETags) {
-    List<PartETag> parts = new ArrayList<>(partETags);
-    parts.sort(Comparator.comparing(PartETag::getPartNumber));
-    String expectedETag = computeCompleteFileETag(parts);
-    if (!expectedETag.equals(s3ObjectETag)) {
-      throw new IntegrityCheckException(String.format(
-          "File upload completed, but integrity check failed. Expected ETag: %s but actual is %s",
-          expectedETag, s3ObjectETag));
-    }
-  }
-
-  // todo: move it
-  private String computeCompleteFileETag(List<PartETag> parts) {
-    // When S3 combines the parts of a multipart upload into the final object, the ETag value is set to the
-    // hex-encoded MD5 hash of the concatenated binary-encoded (raw bytes) MD5 hashes of each part followed by
-    // "-" and the number of parts.
-    MessageDigest md = Utils.md5();
-    for (PartETag partETag : parts) {
-      md.update(BinaryUtils.fromHex(partETag.getETag()));
-    }
-    // Represent byte array as a 32-digit number hexadecimal format followed by "-<partCount>".
-    return String.format("%032x-%d", new BigInteger(1, md.digest()), parts.size());
   }
 }

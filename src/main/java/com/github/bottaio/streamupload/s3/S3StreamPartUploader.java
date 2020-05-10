@@ -1,6 +1,9 @@
-package bottaio.s3upload;
+package com.github.bottaio.streamupload.s3;
 
 import com.amazonaws.services.s3.model.PartETag;
+import com.github.bottaio.streamupload.StreamPart;
+import com.github.bottaio.streamupload.StreamPartUploader;
+import com.github.bottaio.streamupload.s3.AwsFacade;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-public class SimpleStreamPartUploader implements StreamPartUploader {
+public class S3StreamPartUploader implements StreamPartUploader {
   private final List<PartETag> partETags = new ArrayList<>();
   private final AwsFacade awsFacade;
 

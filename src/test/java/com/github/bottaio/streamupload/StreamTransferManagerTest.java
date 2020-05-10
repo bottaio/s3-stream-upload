@@ -1,6 +1,5 @@
-package bottaio.s3upload.test;
+package com.github.bottaio.streamupload;
 
-import bottaio.s3upload.*;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.SDKGlobalConfiguration;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -13,6 +12,8 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.UploadPartRequest;
 import com.amazonaws.util.AwsHostNameUtils;
 import com.amazonaws.util.IOUtils;
+import com.github.bottaio.streamupload.s3.AwsFacade;
+import com.github.bottaio.streamupload.s3.S3StreamPartUploader;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -34,6 +35,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Properties;
 import java.util.Random;
+
+import static com.amazonaws.services.s3.internal.Constants.MB;
+import static com.github.bottaio.streamupload.StreamTransferManager.Config;
 
 /**
  * A WIP test using s3proxy to avoid requiring actually connecting to a real S3 bucket.
@@ -167,7 +171,7 @@ public class StreamTransferManagerTest {
     Config config = Config.builder()
         .bucketName(containerName)
         .putKey(key)
-        .partSize(10)
+        .partSize(10 * MB)
         .checkIntegrity(true)
         .build();
 
@@ -175,10 +179,10 @@ public class StreamTransferManagerTest {
       @Override
       protected UploadPartRequest uploadPartRequest(String uploadId, StreamPart part) {
         UploadPartRequest request = super.uploadPartRequest(uploadId, part);
-                /*
-                Workaround from https://github.com/andrewgaul/s3proxy/commit/50a302436271ec46ce81a415b4208b9e14fcaca4
-                to deal with https://github.com/andrewgaul/s3proxy/issues/80
-                 */
+        /*
+        Workaround from https://github.com/andrewgaul/s3proxy/commit/50a302436271ec46ce81a415b4208b9e14fcaca4
+        to deal with https://github.com/andrewgaul/s3proxy/issues/80
+         */
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType("application/unknown");
         request.setObjectMetadata(metadata);
@@ -187,7 +191,7 @@ public class StreamTransferManagerTest {
       }
     };
 
-    final StreamTransferManager manager = new StreamTransferManager(config, new SimpleStreamPartUploader(facade));
+    final StreamTransferManager manager = new StreamTransferManager(config, new S3StreamPartUploader(facade));
 
     final MultipartOutputStream stream = manager.getMultiPartOutputStream();
     final StringBuilder builder = new StringBuilder();
