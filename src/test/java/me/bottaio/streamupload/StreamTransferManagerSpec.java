@@ -18,14 +18,14 @@ import static me.bottaio.streamupload.StreamTransferManager.Config;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
 @Testcontainers
-public class StreamTransferManagerTest {
+public class StreamTransferManagerSpec {
 
   @Container
   private static final LocalStackContainer localstack = new LocalStackContainer()
       .withServices(S3);
 
   @ParameterizedTest
-  @ValueSource(ints = {1000000, 0})
+  @ValueSource(ints = {0, 100, 1000000, 3000000})
   public void testTransferManager(final int numLines) throws Exception {
     String bucketName = "bucket";
     String key = "key";

@@ -11,7 +11,7 @@ import java.security.MessageDigest;
 /**
  * A ByteArrayOutputStream with some useful additional functionality.
  */
-class ConvertibleOutputStream extends ByteArrayOutputStream {
+public class ConvertibleOutputStream extends ByteArrayOutputStream {
 
   private static final Logger log = LoggerFactory.getLogger(ConvertibleOutputStream.class);
 
