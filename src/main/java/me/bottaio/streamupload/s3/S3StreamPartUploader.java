@@ -8,12 +8,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 public class S3StreamPartUploader implements StreamPartUploader {
-  private final List<PartETag> partETags = new ArrayList<>();
+  private final List<PartETag> partETags = Collections.synchronizedList(new ArrayList<>());
   private final AwsFacade awsFacade;
 
   @Getter

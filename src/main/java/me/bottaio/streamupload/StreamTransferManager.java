@@ -19,14 +19,19 @@ public class StreamTransferManager {
 
   public StreamTransferManager(Config config, StreamPartUploader uploader) {
     this.config = config;
-    this.uploader = uploader;
+
+    if (config.getNumWorkers() > 1) {
+      this.uploader = new ParallelStreamPartUploader(config, uploader);
+    } else {
+      this.uploader = uploader;
+    }
 
     log.debug("Initiating multipart upload to {}/{}", this.config.bucketName, this.config.putKey);
-    uploader.initialize();
+    this.uploader.initialize();
     log.info("Initiated multipart upload to {}/{}", this.config.bucketName, this.config.putKey);
 
     try {
-      this.multiPartOutputStream = new MultipartOutputStream(this.config.partSize, uploader);
+      this.multiPartOutputStream = new MultipartOutputStream(this.config.partSize, this.uploader);
     } catch (Throwable e) {
       throw abort(e);
     }
@@ -84,5 +89,9 @@ public class StreamTransferManager {
     private final int partSize = 5 * MB;
     @Builder.Default
     private final boolean checkIntegrity = false;
+    @Builder.Default
+    private final int queueCapacity = 2;
+    @Builder.Default
+    private final int numWorkers = 2;
   }
 }
