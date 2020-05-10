@@ -1,9 +1,6 @@
 package bottaio.s3upload.test;
 
-import bottaio.s3upload.AwsFacade;
-import bottaio.s3upload.MultiPartOutputStream;
-import bottaio.s3upload.StreamPart;
-import bottaio.s3upload.StreamTransferManager;
+import bottaio.s3upload.*;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.SDKGlobalConfiguration;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -42,8 +39,6 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import static com.amazonaws.services.s3.internal.Constants.MB;
 
 /**
  * A WIP test using s3proxy to avoid requiring actually connecting to a real S3 bucket.
@@ -171,7 +166,7 @@ public class StreamTransferManagerTest {
                 .build();
 
         int numStreams = 2;
-        StreamTransferManager.Config config = StreamTransferManager.Config.builder()
+        Config config = Config.builder()
             .bucketName(containerName)
             .putKey(key)
             .numStreams(numStreams)

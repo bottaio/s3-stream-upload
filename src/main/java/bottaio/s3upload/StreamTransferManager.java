@@ -2,8 +2,6 @@ package bottaio.s3upload;
 
 import com.amazonaws.services.s3.model.PartETag;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,13 +10,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 
-import static com.amazonaws.services.s3.internal.Constants.MB;
-
 public class StreamTransferManager {
 
   private static final Logger log = LoggerFactory.getLogger(StreamTransferManager.class);
   private static final int MAX_PART_NUMBER = 10000;
-  private final Config config;
+  private final StreamTransferManagerConfig config;
   private final AwsFacade awsFacade;
   private final List<PartETag> partETags = Collections.synchronizedList(new ArrayList<PartETag>());
   private final Object leftoverStreamPartLock = new Object();
@@ -29,39 +25,10 @@ public class StreamTransferManager {
   private int finishedCount = 0;
   private StreamPart leftoverStreamPart = null;
   private boolean isAborting = false;
+
   public StreamTransferManager(Config config, AwsFacade awsFacade) {
-    validateConfig(config);
-    this.config = config;
+    this.config = config.toStreamTransferManagerConfig();
     this.awsFacade = awsFacade;
-  }
-
-  // todo: replace it
-  private void validateConfig(Config config) {
-    if (config.checkIntegrity) {
-      Utils.md5();  // check that algorithm is available
-    }
-
-    if (config.numStreams < 1) {
-      throw new IllegalArgumentException("There must be at least one stream");
-    }
-
-    if (config.numUploadThreads < 1) {
-      throw new IllegalArgumentException("There must be at least one upload thread");
-    }
-
-    if (config.queueCapacity < 1) {
-      throw new IllegalArgumentException("The queue capacity must be at least 1");
-    }
-
-    if (config.partSize * MB < MultiPartOutputStream.S3_MIN_PART_SIZE) {
-      throw new IllegalArgumentException(String.format(
-          "The given part size (%d) is less than 5 MB.", config.partSize));
-    }
-
-    if (((long) config.partSize) * MB > Integer.MAX_VALUE) {
-      throw new IllegalArgumentException(String.format(
-          "The given part size (%d) is too large as it does not fit in a 32 bit int", config.partSize));
-    }
   }
 
   /**
@@ -87,12 +54,12 @@ public class StreamTransferManager {
 
       for (int i = 0; i < config.numStreams; i++) {
         int partNumberEnd = (i + 1) * MAX_PART_NUMBER / config.numStreams + 1;
-        MultiPartOutputStream multiPartOutputStream = new MultiPartOutputStream(partNumberStart, partNumberEnd, config.partSize * MB, queue);
+        MultiPartOutputStream multiPartOutputStream = new MultiPartOutputStream(partNumberStart, partNumberEnd, config.partSize, queue);
         partNumberStart = partNumberEnd;
         multiPartOutputStreams.add(multiPartOutputStream);
       }
 
-      executorServiceResultsHandler = new ExecutorServiceResultsHandler<Void>(threadPool);
+      executorServiceResultsHandler = new ExecutorServiceResultsHandler<>(threadPool);
       for (int i = 0; i < config.numUploadThreads; i++) {
         executorServiceResultsHandler.submit(new UploadTask());
       }
@@ -193,24 +160,15 @@ public class StreamTransferManager {
         config.bucketName, config.putKey, Utils.skipMiddle(uploadId, 21));
   }
 
-  @Data
   @Builder
-  public static class Config {
-    @NonNull
+  public static class StreamTransferManagerConfig {
     private final String bucketName;
-    @NonNull
     private final String putKey;
-
-    @Builder.Default
-    private int numStreams = 1;
-    @Builder.Default
-    private int numUploadThreads = 1;
-    @Builder.Default
-    private int queueCapacity = 1;
-    @Builder.Default
-    private int partSize = 5;
-    @Builder.Default
-    private boolean checkIntegrity = false;
+    private final int numStreams;
+    private final int numUploadThreads;
+    private final int queueCapacity;
+    private final int partSize;
+    private final boolean checkIntegrity;
   }
 
   private class UploadTask implements Callable<Void> {

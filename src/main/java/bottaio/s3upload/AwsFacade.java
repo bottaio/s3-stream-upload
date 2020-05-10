@@ -14,7 +14,7 @@ import java.util.List;
 
 @AllArgsConstructor
 public class AwsFacade {
-  private final StreamTransferManager.Config config;
+  private final Config config;
   private final AmazonS3 s3Client;
 
   protected InitiateMultipartUploadRequest initiateMultipartUploadRequest() {
