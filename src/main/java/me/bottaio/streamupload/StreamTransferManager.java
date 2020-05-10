@@ -1,4 +1,4 @@
-package com.github.bottaio.streamupload;
+package me.bottaio.streamupload;
 
 import lombok.Builder;
 import lombok.Data;

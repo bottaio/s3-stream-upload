@@ -1,14 +1,13 @@
-package com.github.bottaio.streamupload.s3;
+package me.bottaio.streamupload.s3;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
-import com.github.bottaio.streamupload.StreamPart;
+import me.bottaio.streamupload.StreamPart;
 import lombok.RequiredArgsConstructor;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
 
-import static com.github.bottaio.streamupload.StreamTransferManager.Config;
+import static me.bottaio.streamupload.StreamTransferManager.Config;
 
 @RequiredArgsConstructor
 public class AwsFacade {
@@ -27,13 +26,6 @@ public class AwsFacade {
         .withPartNumber(part.getPartNumber())
         .withInputStream(part.getInputStream())
         .withPartSize(part.size());
-  }
-
-  protected PutObjectRequest putEmptyObjectRequest() {
-    ByteArrayInputStream emptyStream = new ByteArrayInputStream(new byte[0]);
-    ObjectMetadata metadata = new ObjectMetadata();
-    metadata.setContentLength(0);
-    return new PutObjectRequest(config.getBucketName(), config.getPutKey(), emptyStream, metadata);
   }
 
   protected CompleteMultipartUploadRequest finalizeUploadRequest(String uploadId, List<PartETag> partETags) {
@@ -58,11 +50,6 @@ public class AwsFacade {
 
     UploadPartResult uploadPartResult = s3Client.uploadPart(uploadRequest);
     return uploadPartResult.getPartETag();
-  }
-
-  public final void putEmptyObject() {
-    PutObjectRequest request = putEmptyObjectRequest();
-    s3Client.putObject(request);
   }
 
   public final void finalizeUpload(String uploadId, List<PartETag> partETags) {

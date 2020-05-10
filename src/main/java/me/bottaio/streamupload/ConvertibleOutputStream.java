@@ -1,4 +1,4 @@
-package com.github.bottaio.streamupload;
+package me.bottaio.streamupload;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

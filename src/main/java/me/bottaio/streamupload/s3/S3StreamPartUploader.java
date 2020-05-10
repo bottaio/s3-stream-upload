@@ -1,9 +1,8 @@
-package com.github.bottaio.streamupload.s3;
+package me.bottaio.streamupload.s3;
 
 import com.amazonaws.services.s3.model.PartETag;
-import com.github.bottaio.streamupload.StreamPart;
-import com.github.bottaio.streamupload.StreamPartUploader;
-import com.github.bottaio.streamupload.s3.AwsFacade;
+import me.bottaio.streamupload.StreamPart;
+import me.bottaio.streamupload.StreamPartUploader;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,13 +34,7 @@ public class S3StreamPartUploader implements StreamPartUploader {
   @Override
   public void complete() {
     log.debug("Completing");
-    if (partETags.isEmpty()) {
-      log.debug("Uploading empty stream");
-      awsFacade.abortUpload(uploadId);
-      awsFacade.putEmptyObject();
-    } else {
-      awsFacade.finalizeUpload(uploadId, partETags);
-    }
+    awsFacade.finalizeUpload(uploadId, partETags);
     log.info("Completed");
   }
 

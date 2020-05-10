@@ -1,4 +1,4 @@
-package com.github.bottaio.streamupload;
+package me.bottaio.streamupload;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,6 +66,10 @@ public class MultipartOutputStream extends OutputStream {
   }
 
   private void uploadCurrentStream(ConvertibleOutputStream newStream) {
+    if (currentStream.size() == 0) {
+      return;
+    }
+
     StreamPart streamPart = new StreamPart(currentStream, currentPartNumber++);
     log.debug("Putting {} on queue", streamPart);
     uploader.upload(streamPart);
